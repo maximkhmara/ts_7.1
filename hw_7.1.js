@@ -1,17 +1,33 @@
 "use strict";
 function isUser(entity) {
-    return entity.username !== undefined && entity.password !== undefined;
+    return (typeof entity === "object" &&
+        entity !== null &&
+        "username" in entity &&
+        typeof entity.username === "string" &&
+        "password" in entity &&
+        typeof entity.password === "string");
 }
 function isGuest(entity) {
-    return entity.sessionId !== undefined;
+    return (typeof entity === "object" &&
+        entity !== null &&
+        "sessionId" in entity &&
+        typeof entity.sessionId === "string");
 }
 function isAdmin(entity) {
-    return (entity.role === "admin" &&
-        entity.username !== undefined &&
-        entity.password !== undefined);
+    return (typeof entity === "object" &&
+        entity !== null &&
+        "role" in entity &&
+        entity.role === "admin" &&
+        "username" in entity &&
+        typeof entity.username === "string" &&
+        "password" in entity &&
+        typeof entity.password === "string");
 }
 function isExternalUser(entity) {
-    return entity.oauthToken !== undefined;
+    return (typeof entity === "object" &&
+        entity !== null &&
+        "oauthToken" in entity &&
+        typeof entity.oauthToken === "string");
 }
 function login(entity) {
     if (isUser(entity)) {

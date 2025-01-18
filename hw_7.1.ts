@@ -17,24 +17,46 @@ type ExternalUser = {
   oauthToken: string;
 };
 
-function isUser(entity: any): entity is User {
-  return (entity as User).username !== undefined && (entity as User).password !== undefined;
-}
-
-function isGuest(entity: any): entity is Guest {
-  return (entity as Guest).sessionId !== undefined;
-}
-
-function isAdmin(entity: any): entity is Admin {
+function isUser(entity: unknown): entity is User {
   return (
-    (entity as Admin).role === "admin" &&
-    (entity as Admin).username !== undefined &&
-    (entity as Admin).password !== undefined
+    typeof entity === "object" &&
+    entity !== null &&
+    "username" in entity &&
+    typeof (entity as User).username === "string" &&
+    "password" in entity &&
+    typeof (entity as User).password === "string"
   );
 }
 
-function isExternalUser(entity: any): entity is ExternalUser {
-  return (entity as ExternalUser).oauthToken !== undefined;
+function isGuest(entity: unknown): entity is Guest {
+  return (
+    typeof entity === "object" &&
+    entity !== null &&
+    "sessionId" in entity &&
+    typeof (entity as Guest).sessionId === "string"
+  );
+}
+
+function isAdmin(entity: unknown): entity is Admin {
+  return (
+    typeof entity === "object" &&
+    entity !== null &&
+    "role" in entity &&
+    (entity as Admin).role === "admin" &&
+    "username" in entity &&
+    typeof (entity as Admin).username === "string" &&
+    "password" in entity &&
+    typeof (entity as Admin).password === "string"
+  );
+}
+
+function isExternalUser(entity: unknown): entity is ExternalUser {
+  return (
+    typeof entity === "object" &&
+    entity !== null &&
+    "oauthToken" in entity &&
+    typeof (entity as ExternalUser).oauthToken === "string"
+  );
 }
 
 function login(entity: User | Guest | Admin | ExternalUser): void {
@@ -50,7 +72,6 @@ function login(entity: User | Guest | Admin | ExternalUser): void {
     console.log("Unknown entity type.");
   }
 }
-
 
 login({ username: "john_doe", password: "1234" });
 login({ sessionId: "abcd1234" });
